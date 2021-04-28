@@ -10,14 +10,18 @@ import Foundation
 struct Token {
     let type: TokenType
     let lexeme: String
-    let literal: CustomStringConvertible
+    let literal: CustomStringConvertible?
     let line: Int
     
 }
 
 extension Token: CustomStringConvertible {
     var description: String {
-        return [type.rawValue, lexeme, literal.description].joined(separator: " ")
+        return [
+            type.rawValue,
+            lexeme,
+            literal?.description ?? ""
+        ].joined(separator: " ")
     }
 }
 
