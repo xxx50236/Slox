@@ -9,3 +9,8 @@ import Foundation
 
 print("Hello, World!")
 
+let scan = Scanner("var a = \"slox is language\"")
+let token = scan.scanTokens()
+
+print(token)
+

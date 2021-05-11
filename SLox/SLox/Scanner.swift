@@ -24,6 +24,31 @@ class Scanner {
 
 extension Scanner {
     
+    var keywords: [String: Token.TokenType] {
+        return [
+            "and": .and,
+            "class": .class,
+            "else": .else,
+            "false": .false,
+            "for": .for,
+            "fun": .fun,
+            "if": .if,
+            "nil": .nil,
+            "or": .or,
+            "print": .print,
+            "return": .return,
+            "super": .super,
+            "this": .this,
+            "true": .true,
+            "var": .var,
+            "while": .while,
+        ]
+    }
+    
+}
+
+extension Scanner {
+    
     func scanTokens() -> [Token] {
         
         while !isAtEnd() {
@@ -34,18 +59,16 @@ extension Scanner {
         return tokens
         
     }
-    
-    private func isAtEnd() -> Bool {
-        return current >= source.count
-    }
-            
+                
 }
 
 extension Scanner {
     
     private func scanToken() {
         
-        let c = advance()
+        guard let c = advance() else {
+            return
+        }
         
         switch c {
         case "(":
@@ -68,19 +91,143 @@ extension Scanner {
             addToken(type: .semicolon)
         case "*":
             addToken(type: .star)
+        case "!":
+            addToken(type: match(expected: "=") ? .bangEqual : .bang)
+        case "=":
+            addToken(type: match(expected: "=") ? .equalEqual : .equal)
+        case "<":
+            addToken(type: match(expected: "=") ? .lessEqual : .less)
+        case ">":
+            addToken(type: match(expected: "=") ? .greaterEqual : .greater)
+        case "/":
+            if match(expected: "/") {
+                while peek() != "\n" && !isAtEnd() { advance() }
+            } else {
+                addToken(type: .slash)
+            }
+        case " ", "\r", "\t":
+            break
+        case "\"":
+            string()
+        case "\n":
+            line += 1
         default:
-            SLox.error(line: line, message: "Unexpected character.")
+            
+            if c.isNumber {
+                number()
+            } else if c.isLetter || c == "_" {
+                identifier()
+            } else {
+                SLox.error(line: line, message: "Unexpected character.")
+            }
+            
         }
         
     }
     
-    private func advance() -> Character {
-        defer {
-            current += 1
+    private func string() {
+        while peek() != "\"" && !isAtEnd() {
+            if peek() == "\n" {
+                line += 1
+            }
+            advance()
+        }
+        
+        if isAtEnd() {
+            SLox.error(line: line, message: "Unterminated string.")
+            return
+        }
+        
+        advance()
+        
+        let s = start + 1
+        let c = current - 1
+        let value = source[s..<c]
+        addToken(type: .string, literal: String(value))
+    }
+    
+    private func number() {
+        
+        while let c = peek(), c.isNumber {
+            advance()
+        }
+        
+        if let c = peek(),
+           let next = peekNext(),
+           next.isNumber && c == "." {
+            
+            // Consume the "."
+            advance()
+            
+            while let c = peek(), c.isNumber {
+                advance()
+            }
+            
+        }
+        let s = String(source[start..<current])
+        addToken(type: .number, literal: Double(s))
+    }
+    
+    private func identifier() {
+        
+        while let c = peek(), c.isLetter || c.isNumber {
+            advance()
+        }
+        
+        let text = String(source[start..<current])
+        let type = keywords[text] ?? .identifier
+        
+        addToken(type: type)
+        
+    }
+    
+    @discardableResult
+    private func advance() -> Character? {
+
+        if isAtEnd() {
+            return nil
+        }
+        
+        let c = source[current]
+        current += 1
+        
+        return c
+    }
+    
+    private func match(expected: Character) -> Bool {
+        if isAtEnd() {
+            return false
+        }
+        
+        if source[current] != expected {
+            return false
+        }
+        
+        current += 1
+        return true
+    }
+    
+    private func isAtEnd() -> Bool {
+        return current >= source.count
+    }
+    
+    private func peek() -> Character? {
+        if isAtEnd() {
+            return nil
         }
         
         return source[current]
     }
+    
+    private func peekNext() -> Character? {
+        if current + 1 >= source.count {
+            return nil
+        }
+        return source[current + 1]
+    }
+}
+
+extension Scanner {
     
     private func addToken(type: Token.TokenType) {
         addToken(type: type, literal: nil)
