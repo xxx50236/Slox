@@ -1,2 +1,5 @@
 
 SLox/SLox.xcodeproj/project.xcworkspace/xcuserdata/CB.xcuserdatad/UserInterfaceState.xcuserstate
+*.pbxproj
+*.xcuserstate
+SLox/SLox.xcodeproj/xcuserdata/CB.xcuserdatad/xcschemes/xcschememanagement.plist

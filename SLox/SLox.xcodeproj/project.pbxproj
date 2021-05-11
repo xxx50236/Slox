@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2223F6A92648D9B400C28F32 /* ScannerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2223F6A82648D9B400C28F32 /* ScannerTest.swift */; };
 		2223F6BB2649146C00C28F32 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2223F6BA2649146C00C28F32 /* Expr.swift */; };
+		227FBB33264ACE730045364E /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227FBB32264ACE730045364E /* Parser.swift */; };
 		22B06EF826288B990048B23D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06EF726288B990048B23D /* main.swift */; };
 		22B06F03262DCD2B0048B23D /* SLox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06F02262DCD2B0048B23D /* SLox.swift */; };
 		22B06F06262DCEF90048B23D /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06F05262DCEF90048B23D /* Scanner.swift */; };
@@ -32,6 +33,7 @@
 		2223F69C2648D90F00C28F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2223F6A82648D9B400C28F32 /* ScannerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTest.swift; sourceTree = "<group>"; };
 		2223F6BA2649146C00C28F32 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
+		227FBB32264ACE730045364E /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		22B06EF426288B990048B23D /* SLox */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLox; sourceTree = BUILT_PRODUCTS_DIR; };
 		22B06EF726288B990048B23D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		22B06F02262DCD2B0048B23D /* SLox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLox.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				2223F6BA2649146C00C28F32 /* Expr.swift */,
+				227FBB32264ACE730045364E /* Parser.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			files = (
 				2223F6BB2649146C00C28F32 /* Expr.swift in Sources */,
 				22B06EF826288B990048B23D /* main.swift in Sources */,
+				227FBB33264ACE730045364E /* Parser.swift in Sources */,
 				22B06F06262DCEF90048B23D /* Scanner.swift in Sources */,
 				22B06F03262DCD2B0048B23D /* SLox.swift in Sources */,
 				22B06F09262DCF500048B23D /* Token.swift in Sources */,
