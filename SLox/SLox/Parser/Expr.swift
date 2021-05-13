@@ -46,7 +46,7 @@ struct Group: Expr {
 }
 
 struct Literal: Expr {
-    let value: Any
+    let value: Any?
     
     func accept<V>(visitor v: V) -> V.R where V : Visitor {
         v.visitLiteral(self)
