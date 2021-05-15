@@ -7,6 +7,18 @@
 
 import Foundation
 
+/*
+ expression     → equality ;
+ equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+ comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+ term           → factor ( ( "-" | "+" ) factor )* ;
+ factor         → unary ( ( "/" | "*" ) unary )* ;
+ unary          → ( "!" | "-" ) unary
+                | primary ;
+ primary        → NUMBER | STRING | "true" | "false" | "nil"
+                | "(" expression ")" ;
+ */
+
 class Parser {
     
     private let tokens: [Token]
@@ -16,8 +28,17 @@ class Parser {
         self.tokens = tokens
     }
     
+    func parse() -> Expr? {
+        do {
+            return try expression()
+        } catch {
+            return nil
+        }
+    }
+    
 }
 
+// MARK: Expression
 extension Parser {
     
     private func expression() throws -> Expr {
@@ -26,6 +47,7 @@ extension Parser {
         
 }
 
+// MARK: Equality
 extension Parser {
     
     private func equality() throws -> Expr {
@@ -45,6 +67,7 @@ extension Parser {
     
 }
 
+// MARK: Comparison
 extension Parser {
     
     private func comparison() throws -> Expr {
@@ -62,6 +85,7 @@ extension Parser {
     
 }
 
+// MARK: Term
 extension Parser {
     
     private func term() throws -> Expr {
@@ -79,6 +103,7 @@ extension Parser {
     
 }
 
+// MARK: Factor
 extension Parser {
     
     private func factor() throws -> Expr {
@@ -96,6 +121,7 @@ extension Parser {
     
 }
 
+// MARK: Unary
 extension Parser {
     
     private func unary() throws -> Expr {
@@ -109,6 +135,7 @@ extension Parser {
     
 }
 
+// MARK: Primary
 extension Parser {
     
     private func primary() throws -> Expr {
@@ -202,6 +229,29 @@ extension Parser {
     
 }
 
+// MARK: Synchronize
+extension Parser {
+    
+    private var beginStmtTypes: [Token.TokenType] {
+        return [.class, .fun, .var, .for, .if, .while, .print, .return]
+    }
+
+    func synchronize() {
+        
+        advance()
+        
+        while let type = previous()?.type {
+            if beginStmtTypes.contains(type) {
+                return
+            }
+            advance()
+        }
+        
+    }
+    
+}
+
+// MARK: Error
 extension Parser {
     
     private func error(token: Token, message: String) -> ParserError {
