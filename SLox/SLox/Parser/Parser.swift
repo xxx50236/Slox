@@ -145,7 +145,7 @@ extension Parser {
         } else if match(types: .true) {
             return Literal(value: true)
         } else if match(types: .nil) {
-            return Literal(value: nil)
+            return Literal(value: NilLiteral(nilLiteral: ()))
         }
         
         if match(types: .number, .string) {

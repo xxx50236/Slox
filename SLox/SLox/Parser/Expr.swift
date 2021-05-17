@@ -45,14 +45,6 @@ struct Group: Expr {
     }
 }
 
-struct Literal: Expr {
-    let value: Any?
-    
-    func accept<V>(visitor v: V) -> V.R where V : Visitor {
-        v.visitLiteral(self)
-    }
-}
-
 struct Unary: Expr {
     let op: Token
     let right: Expr
@@ -60,5 +52,17 @@ struct Unary: Expr {
     func accept<V>(visitor v: V) -> V.R where V : Visitor {
         v.visitUnary(self)
     }
+}
+
+struct Literal: Expr {
+    let value: Any
+    
+    func accept<V>(visitor v: V) -> V.R where V : Visitor {
+        v.visitLiteral(self)
+    }
+}
+
+struct NilLiteral: ExpressibleByNilLiteral {
+    init(nilLiteral: ()) {}
 }
 
