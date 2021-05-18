@@ -148,8 +148,8 @@ extension Parser {
             return Literal(value: NilLiteral(nilLiteral: ()))
         }
         
-        if match(types: .number, .string) {
-            return Literal(value: previous()?.literal)
+        if match(types: .number, .string), let value = previous()?.literal {
+            return Literal(value: value)
         }
         
         if match(types: .leftParen) {
