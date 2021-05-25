@@ -10,6 +10,7 @@ import Foundation
 class SLox {
     
     static private(set) var hadError = false
+    static private(set) var hadRuntimeError = false
     
 }
 
@@ -43,6 +44,12 @@ extension SLox {
         
     static func error(token: Token, message: String) {
         report(line: token.line, where: "at '\(token.lexeme)'", message: message)
+    }
+    
+    static func runtimeError(_ error: RuntimeError) {
+        print("\(error.message)")
+        print("[line \(error.token.line)]")
+        hadRuntimeError = true
     }
     
     static private func report(line: Int, where: String, message: String) {
