@@ -23,7 +23,10 @@ extension SLox {
         let tokens = scanner.scanTokens()
         
         let parser = Parser(tokens: tokens)
-        let exp = parser.parse()
+        let statements = parser.parse()
+        
+        let interpreter = Interpreter()
+        interpreter.interpret(statements)
         
         if SLox.hadError {
             return

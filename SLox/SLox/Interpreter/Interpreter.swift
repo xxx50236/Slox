@@ -9,25 +9,36 @@ import Foundation
 
 class Interpreter {
     
-    func interprert(expr: Expr) {
+    func interpret(_ statements: [Stmt]) {
         
         do {
-            let value = try evaluate(expr: expr)
-            print(stringify(ob: value))
-        } catch {
-            
-            if let e = error as? RuntimeError {
-                SLox.runtimeError(e)
+            for stmt in statements {
+                try execute(stmt: stmt)
             }
-            
+        } catch {
+            SLox.runtimeError(error as! RuntimeError)
         }
         
     }
     
 }
 
+// Interpreter statements
+extension Interpreter: StmtVisitor {
+    
+    func visitPrintStmt(_ stmt: Print) throws {
+        try evaluate(expr: stmt.expr)
+    }
+    
+    func visitExpressionStmt(_ stmt: Expression) throws {
+        let value = try evaluate(expr: stmt.expr)
+        print(stringify(ob: value))
+    }
+
+}
+
 // Interpreter expression
-extension Interpreter: Visitor {
+extension Interpreter: ExprVisitor {
 
     func visitBinary(_ binary: Binary) throws -> Any? {
         guard let left = try evaluate(expr: binary.left), let right = try evaluate(expr: binary.right) else {
@@ -129,6 +140,11 @@ extension Interpreter {
         return a == b
     }
     
+    private func execute(stmt: Stmt) throws {
+        try stmt.accept(visitor: self)
+    }
+    
+    @discardableResult
     private func evaluate(expr: Expr) throws -> Any? {
         return try expr.accept(visitor: self)
     }

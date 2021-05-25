@@ -9,21 +9,7 @@ import Foundation
 
 protocol Expr {
     
-    func accept<V: Visitor>(visitor v: V) throws -> V.R
-    
-}
-
-protocol Visitor {
-    
-    associatedtype R
-    
-    func visitBinary(_ binary: Binary) throws -> R
-    
-    func visitGroup(_ group: Group) throws -> R
-    
-    func visitLiteral(_ literal: Literal) throws -> R
-    
-    func visitUnary(_ unary: Unary) throws -> R
+    func accept<V: ExprVisitor>(visitor v: V) throws -> V.R
     
 }
 
@@ -32,7 +18,7 @@ struct Binary: Expr {
     let op: Token
     let right: Expr
     
-    func accept<V>(visitor v: V) throws -> V.R where V : Visitor {
+    func accept<V>(visitor v: V) throws -> V.R where V : ExprVisitor {
         try v.visitBinary(self)
     }
 }
@@ -40,7 +26,7 @@ struct Binary: Expr {
 struct Group: Expr {
     let expr: Expr
     
-    func accept<V>(visitor v: V) throws -> V.R where V : Visitor {
+    func accept<V>(visitor v: V) throws -> V.R where V : ExprVisitor {
         try v.visitGroup(self)
     }
 }
@@ -49,7 +35,7 @@ struct Unary: Expr {
     let op: Token
     let right: Expr
     
-    func accept<V>(visitor v: V) throws -> V.R where V : Visitor {
+    func accept<V>(visitor v: V) throws -> V.R where V : ExprVisitor {
         try v.visitUnary(self)
     }
 }
@@ -57,7 +43,7 @@ struct Unary: Expr {
 struct Literal: Expr {
     let value: Any
     
-    func accept<V>(visitor v: V) throws -> V.R where V : Visitor {
+    func accept<V>(visitor v: V) throws -> V.R where V : ExprVisitor {
         try v.visitLiteral(self)
     }
 }

@@ -8,6 +8,15 @@
 import Foundation
 
 /*
+ 
+ program        → statement* EOF ;
+
+ statement      → exprStmt
+                | printStmt ;
+
+ exprStmt       → expression ";" ;
+ printStmt      → "print" expression ";" ;
+ 
  expression     → equality ;
  equality       → comparison ( ( "!=" | "==" ) comparison )* ;
  comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
@@ -17,6 +26,7 @@ import Foundation
                 | primary ;
  primary        → NUMBER | STRING | "true" | "false" | "nil"
                 | "(" expression ")" ;
+ 
  */
 
 class Parser {
@@ -28,14 +38,49 @@ class Parser {
         self.tokens = tokens
     }
     
-    func parse() -> Expr? {
-        do {
-            return try expression()
-        } catch {
-            return nil
+    
+    func parse() -> [Stmt] {
+                
+        var statements = [Stmt]()
+        
+        while !isAtEnd() {
+            
+            do {
+                try statements.append(statement())
+            } catch {
+                return statements
+            }
+            
         }
+        
+        return statements
     }
     
+}
+
+// MARK: Statement
+extension Parser {
+    
+    private func statement() throws -> Stmt {
+        
+        if match(types: .print) {
+            return try printStatement()
+        }
+        
+        return try expressionStatement()
+    }
+    
+    private func printStatement() throws -> Stmt {
+        let value = try expression()
+        try consume(type: .semicolon, message: "Expect ';' after value.")
+        return Print(expr: value)
+    }
+    
+    private func expressionStatement() throws -> Stmt {
+        let expr = try expression()
+        try consume(type: .semicolon, message: "Expect ';' after value.")
+        return Expression(expr: expr)
+    }
 }
 
 // MARK: Expression
